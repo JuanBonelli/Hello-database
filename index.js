@@ -1,31 +1,32 @@
-const express = require ('express');
-const mongoose = require ('mongoose');
+// index.js
 
-const router = require ('./routes/api/user');
+// ahora tambien importamos mongoose
+const express  = require('express');
+const mongoose = require('mongoose');
 
-const cors     = require('cors');
-const app = express()
+// importamos el router que creamos para la api
+const router = require('./routes/api/user');
 
-app.use(cors());
+// puerto y base de datos
+const port = process.env.PORT        || 3000;
+const db   = process.env.MONGODB_URI || 'mongodb://localhost/hellodb';
 
-const port = process.env.PORT || 3000;
-const db = process.env.MONGODB_URI || 'mongodb://localhost/hellodb';
-const app = express ();
+const app = express();
 
-mongoose.set ('useUnifiedTopology', true);
+// conexion a la base de datos
+mongoose.set('useUnifiedTopology', true);
 mongoose.set('useFindAndModify', false);
 mongoose
-  .connect (db, {useNewUrlParser: true})
-  .then (()=> {
-    console.log (`DB connected @ ${db}`);
+  .connect(db, { useNewUrlParser: true })
+  .then(() => {
+    console.log(`DB connected @ ${db}`);
   })
-  .catch (err=> console.error (`Connection error  ${err}`));
+.catch(err => console.error(`Connection error ${err}`));
 
-  app.use ('/api', router);
+// usamos el router
+app.use('/api', router);
 
-  app.listen (port, () => {
-    console.log (`Server listening on port ${port}`);
-  })
-  app.get('/', (req, res) => {
-  res.send('Hello-database');
+// el server escucha todo
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
